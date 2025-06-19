@@ -1,0 +1,3 @@
+./build/X86/gem5.opt  --debug-flags=Cache configs/example/se.py -c ~/benchmark/multiply  --cpu-type=TimingSimpleCPU --caches --l2cache --l3cache --l3_assoc=4 --l1i_size=16kB --l1d_size=16kB --l2_size=256kB --l3_size=1MB --l3_replacement_policy=LRU --mem-type=NVMainMemory --nvmain-config=../NVmain/Config/PCM_ISSCC_2012_4GB.config > multiply_WB_output.log
+
+./build/X86/gem5.opt  --debug-flags=Cache configs/example/se.py -c ~/benchmark/multiply  --cpu-type=TimingSimpleCPU --caches --l2cache --l3cache --l3_assoc=4 --l1i_size=16kB --l1d_size=16kB --l2_size=256kB --l3_size=1MB --l3_replacement_policy=LRU --mem-type=NVMainMemory --nvmain-config=../NVmain/Config/PCM_ISSCC_2012_4GB.config > multiply_WT_output.log
