@@ -100,9 +100,7 @@ def config_cache(options, system):
                 l3_replacement_policy = LFURP()
             elif policy == "WALRU":
 
-                l3_replacement_policy = WALRURP(
-                    #write_cost_weight=0.99  # write weight
-                )
+                l3_replacement_policy = WALRURP()
             elif policy == "BASELINE" or policy == "LRU":
                 l3_replacement_policy = LRURP()  # Baseline
             else:

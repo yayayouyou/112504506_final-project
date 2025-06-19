@@ -1,7 +1,7 @@
 /**
  * @file
- * Declaration of a Clean-First Write-Aware LRU replacement policy for PCM energy optimization.
- * Prioritizes clean blocks over dirty blocks to reduce PCM write energy.
+ * Declaration of an Ultra-Simple Clean-Aware Random Policy (CARP).
+ * Minimalist approach to optimize PCM energy with near-zero overhead.
  */
 
 #ifndef __MEM_CACHE_REPLACEMENT_POLICIES_WALRU_RP_HH__
@@ -14,25 +14,22 @@ struct WALRURPParams;
 class WALRURP : public BaseReplacementPolicy
 {
   protected:
-    /** WALRU-specific implementation of replacement data. */
+    /** Ultra-Simple implementation of replacement data. */
     struct WALRUReplData : ReplacementData
     {
-        /** Tick on which the entry was last touched. */
-        Tick lastTouchTick;
-        
-        /** Number of times this block was accessed. */
-        unsigned accessCount;
-        
-        /** Number of write operations to this block. */
-        unsigned writeCount;
+        /**
+         * Flag informing if the replacement data is valid or not.
+         * Invalid entries are prioritized to be evicted.
+         */
+        bool valid;
 
         /**
-         * Default constructor. Initialize data.
+         * Default constructor. Invalidate data.
          */
-        WALRUReplData() : lastTouchTick(0), accessCount(0), writeCount(0) {}
+        WALRUReplData() : valid(false) {}
     };
 
-    /** Weight factor for write cost in victim selection. */
+    /** Policy configuration parameter (unused in this simple version) */
     const double writeCostWeight;
 
   public:
@@ -50,13 +47,14 @@ class WALRURP : public BaseReplacementPolicy
     ~WALRURP();
 
     /**
-     * Invalidate replacement data.
+     * Invalidate replacement data to set it as the next probable victim.
      */
     void invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
                                                               const override;
 
     /**
      * Touch an entry to update its replacement data.
+     * Deliberately empty to minimize overhead.
      */
     void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
                                                                      override;
@@ -68,8 +66,8 @@ class WALRURP : public BaseReplacementPolicy
                                                                      override;
 
     /**
-     * Find replacement victim using Clean-First strategy.
-     * Prioritizes clean blocks over dirty blocks to reduce PCM writes.
+     * Find replacement victim using Ultra-Simple Clean-Aware Random logic.
+     * Uses limited sampling to favor clean blocks without full sorting overhead.
      */
     ReplaceableEntry* getVictim(const ReplacementCandidates& candidates) const
                                                                      override;
