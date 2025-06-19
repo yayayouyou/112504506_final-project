@@ -1,0 +1,4 @@
+./build/X86/gem5.opt configs/example/se.py -c ~/benchmark/quicksort  --cpu-type=TimingSimpleCPU --caches --l2cache --l3cache --l3_assoc=2 --l1i_size=2kB --l1d_size=2kB --l2_size=8kB --l3_size=16kB --l3_replacement_policy=LRU --mem-type=NVMainMemory --nvmain-config=../NVmain/Config/PCM_ISSCC_2012_4GB.config > quick_LRU_output.log
+
+
+./build/X86/gem5.opt configs/example/se.py -c ~/benchmark/quicksort  --cpu-type=TimingSimpleCPU --caches --l2cache --l3cache --l3_assoc=2 --l1i_size=2kB --l1d_size=2kB --l2_size=8kB --l3_size=16kB --l3_replacement_policy=LFU --mem-type=NVMainMemory --nvmain-config=../NVmain/Config/PCM_ISSCC_2012_4GB.config > quick_LFU_output.log
