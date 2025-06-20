@@ -1,0 +1,46 @@
+
+WB
+
+CPU 寫入請求
+    ↓
+Cache Hit？
+    ↓ YES
+更新 Cache 資料
+    ↓
+標記為 Modified (BlkWritable + BlkDirty)
+    ↓
+完成寫入
+    ↓
+【保持 Modified 狀態，等待後續替換時才寫回】
+    ↓
+後續替換時...
+    ↓
+evictBlock() → writebackBlk() → 產生大量寫回操作
+
+
+WT
+
+
+CPU 寫入請求
+    ↓
+Cache Hit？
+    ↓ YES
+更新 Cache 資料
+    ↓
+標記為 Modified (BlkWritable + BlkDirty)
+    ↓
+【關鍵】立即執行 writecleanBlk()
+    ↓
+建立 WriteClean 封包 (MemCmd::WriteClean)
+    ↓
+【關鍵】blk->status &= ~BlkWritable （移除可寫權限）
+    ↓
+【關鍵】blk->status &= ~BlkDirty    （清除髒位）
+    ↓
+將 WriteClean 封包加入 writebacks
+    ↓
+完成寫入響應
+    ↓
+【結果】塊現在處於 Shared/Clean 狀態
+    ↓
+下次寫入同一位址時會 Miss (因為沒有寫入權限)
