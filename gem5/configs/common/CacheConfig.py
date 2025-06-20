@@ -61,7 +61,7 @@ def config_cache(options, system):
         except:
             print("O3_ARM_v7a_3 is unavailable. Did you compile the O3 model?")
             sys.exit(1)
-
+#------------------------------------------------------------------------------------------------------------------------------------------
         dcache_class, icache_class, l2_cache_class, walk_cache_class,l3_cache_class = \
             O3_ARM_v7a_DCache, O3_ARM_v7a_ICache, O3_ARM_v7aL2, \
             O3_ARM_v7aWalkCache ,O3_ARM_v7aL3

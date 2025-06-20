@@ -969,7 +969,7 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
             return true;
         }
 
-        if (!blk) {
+        if (!blk) {  //cache miss, and we do not have the block
             // need to do a replacement
             blk = allocateBlock(pkt->getAddr(), pkt->isSecure(), writebacks);
             if (!blk) {
@@ -1070,13 +1070,12 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
         satisfyRequest(pkt, blk);
         maintainClusivity(pkt->fromCache(), blk);
 
-
-        /*
+        // WT ：立即 WriteClean 跟 write back ------------------------------------------------------------------------------------------------------------------------
         if (blk->isWritable()) {
             PacketPtr writeclean_pkt = writecleanBlk(blk, pkt->req->getDest(), pkt->id);
             writebacks.push_back(writeclean_pkt);
         }
-        */
+
 
         return true;
     }

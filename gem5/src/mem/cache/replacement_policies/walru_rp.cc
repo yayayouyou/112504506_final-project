@@ -26,7 +26,7 @@ void
 WALRURP::invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
 const
 {
-    // 與原始 Random 策略完全相同：標記為無效
+    //  Random 標記為無效
     std::static_pointer_cast<WALRUReplData>(
         replacement_data)->valid = false;
 }
@@ -34,14 +34,14 @@ const
 void
 WALRURP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
 {
-    // 與原始 Random 策略完全相同：不做任何事
-    // 這是 Random 策略 activeEnergy 低的關鍵原因
+    //  Random 相同
+
 }
 
 void
 WALRURP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
 {
-    // 與原始 Random 策略完全相同：標記為有效
+    //  Random 相同
     std::static_pointer_cast<WALRUReplData>(
         replacement_data)->valid = true;
 }
@@ -51,7 +51,7 @@ WALRURP::getVictim(const ReplacementCandidates& candidates) const
 {
     assert(candidates.size() > 0);
 
-    // 階段 1：優先選擇無效項目（與原始 Random 相同）
+    //1 優先選擇無效 Random 相同
     for (const auto& candidate : candidates) {
         if (!std::static_pointer_cast<WALRUReplData>(
                     candidate->replacementData)->valid) {
@@ -59,25 +59,24 @@ WALRURP::getVictim(const ReplacementCandidates& candidates) const
         }
     }
 
-    // 階段 2：極簡版乾淨優先邏輯
-    // 預先隨機選擇一個候選項作為默認受害者
+    // 2 乾淨優先
+    // 先隨機選
     ReplaceableEntry* victim = candidates[random_mt.random<unsigned>(0,
                                 candidates.size() - 1)];
     
-    // 極簡檢查：只隨機檢查最多 3 個候選項，找到乾淨的就立即返回
-    // 這樣既有隨機性，又能傾向選擇乾淨塊，同時保持極低開銷
+    // 只隨機檢查 MAX_CHECKS 我用 3 個 找到乾淨立即返回
     const int MAX_CHECKS = 3;
     int checks = 0;
     
     for (int i = 0; i < MAX_CHECKS && i < candidates.size(); i++) {
-        // 隨機選擇一個候選項（可能重複選擇，但這是有意的）
+        // 隨機選
         int idx = random_mt.random<unsigned>(0, candidates.size() - 1);
         ReplaceableEntry* candidate = candidates[idx];
         CacheBlk* blk = static_cast<CacheBlk*>(candidate);
         
         checks++;
         
-        // 如果找到乾淨塊，立即返回
+        // 找到立即返回
         if (!blk->isDirty()) {
             return candidate;
         }
